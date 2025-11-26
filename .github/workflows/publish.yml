@@ -30,13 +30,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build builder image
-        run: |
-          docker build --pull --build-arg IMAGE="$IMAGE_BASE" -t "ghcr.io/$OWNER/awx-opnsense-ee-builder:latest" .
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
 
-      - name: Run builder to create final image
+      - name: Install ansible-builder
         run: |
-          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock "ghcr.io/$OWNER/awx-opnsense-ee-builder:latest" -t "ghcr.io/$OWNER/awx-opnsense-ee:latest"
+          pip install ansible-builder
+
+      - name: Build execution environment image
+        run: |
+          ansible-builder build -t "ghcr.io/$OWNER/awx-opnsense-ee:latest" -f execution-environment.yml
 
       - name: Tag image with commit SHA
         run: |
