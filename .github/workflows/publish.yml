@@ -14,10 +14,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_BASE: quay.io/rockylinux/rockylinux:9
-      OWNER: ${{ toLower(github.repository_owner) }}
+      # OWNER is set below (lowercased) via a step so we avoid unsupported functions
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set lowercase OWNER env var
+        run: |
+          echo "OWNER=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Login to ghcr
         uses: docker/login-action@v2

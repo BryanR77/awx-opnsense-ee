@@ -9,7 +9,6 @@ This repository builds an Ansible Execution Environment (EE) for AWX integration
 - `execution-environment.yml`: `ansible-builder` definition for the EE.
 - `requirements.yml`: Ansible Galaxy collections used by the EE.
 - `.github/workflows/publish.yml`: GitHub Actions workflow that builds and pushes to GHCR.
-- `,gitlab-ci.yaml`: original GitLab CI file (left for reference).
 
 **Image names**
 - Latest tag: `ghcr.io/bryanr77/awx-opnsense-ee:latest`
