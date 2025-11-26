@@ -41,7 +41,15 @@ jobs:
 
       - name: Build execution environment image
         run: |
-          ansible-builder build -t "ghcr.io/$OWNER/awx-opnsense-ee:latest" -f execution-environment.yml
+          ansible-builder build \
+            --tag "ghcr.io/$OWNER/awx-opnsense-ee:latest" \
+            --container-runtime docker \
+            --verbosity 2 \
+            --file execution-environment.yml
+
+      - name: Verify image exists
+        run: |
+          docker image ls | grep awx-opnsense-ee
 
       - name: Tag image with commit SHA
         run: |
