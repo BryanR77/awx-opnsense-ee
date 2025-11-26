@@ -1,0 +1,45 @@
+name: Build and publish execution environment
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_BASE: quay.io/rockylinux/rockylinux:9
+      IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/awx-opnsense-ee:latest
+      BUILDER_IMAGE: ghcr.io/${{ github.repository_owner }}/awx-opnsense-ee-builder:latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to ghcr
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build builder image
+        run: |
+          docker build --pull --build-arg IMAGE="$IMAGE_BASE" -t "$BUILDER_IMAGE" .
+
+      - name: Run builder to create final image
+        run: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock "$BUILDER_IMAGE" -t "$IMAGE_NAME"
+
+      - name: Tag image with commit SHA
+        run: |
+          docker tag "$IMAGE_NAME" ghcr.io/${{ github.repository_owner }}/awx-opnsense-ee:${{ github.sha }}
+
+      - name: Push images to ghcr
+        run: |
+          docker push "$IMAGE_NAME"
+          docker push ghcr.io/${{ github.repository_owner }}/awx-opnsense-ee:${{ github.sha }}

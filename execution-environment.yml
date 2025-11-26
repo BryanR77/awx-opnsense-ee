@@ -1,0 +1,17 @@
+---
+version: 3
+dependencies:
+  system:
+    - sshpass
+    - openssh-clients
+    - sudo
+    - patch
+  ansible_core:
+    package_pip: ansible-core
+  ansible_runner:
+    package_pip: ansible-runner
+  galaxy: requirements.yml
+
+images:
+  base_image:
+    name: quay.io/rockylinux/rockylinux:9
