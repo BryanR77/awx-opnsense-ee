@@ -12,8 +12,8 @@ This repository builds an Ansible Execution Environment (EE) for AWX integration
 - `,gitlab-ci.yaml`: original GitLab CI file (left for reference).
 
 **Image names**
-- Latest tag: `ghcr.io/BryanR77/awx-opnsense-ee:latest`
-- Commit-tagged image: `ghcr.io/BryanR77/awx-opnsense-ee:<commit-sha>`
+- Latest tag: `ghcr.io/bryanr77/awx-opnsense-ee:latest`
+- Commit-tagged image: `ghcr.io/bryanr77/awx-opnsense-ee:<commit-sha>`
 
 **Publishing via GitHub Actions**
 
@@ -36,12 +36,12 @@ You can replicate the workflow locally. From the repository root (zsh):
 docker build --pull --build-arg IMAGE=quay.io/rockylinux/rockylinux:9 -t awx-opnsense-ee-builder:latest .
 
 # Run the builder to create the final image
-docker run --rm -v /var/run/docker.sock:/var/run/docker.sock awx-opnsense-ee-builder:latest -t ghcr.io/BryanR77/awx-opnsense-ee:latest
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock awx-opnsense-ee-builder:latest -t ghcr.io/bryanr77/awx-opnsense-ee:latest
 
 # After logging in to ghcr (docker login ghcr.io -u <user> -p <token>):
-docker tag ghcr.io/BryanR77/awx-opnsense-ee:latest ghcr.io/BryanR77/awx-opnsense-ee:$(git rev-parse --short HEAD)
-docker push ghcr.io/BryanR77/awx-opnsense-ee:latest
-docker push ghcr.io/BryanR77/awx-opnsense-ee:$(git rev-parse --short HEAD)
+docker tag ghcr.io/bryanr77/awx-opnsense-ee:latest ghcr.io/bryanr77/awx-opnsense-ee:$(git rev-parse --short HEAD)
+docker push ghcr.io/bryanr77/awx-opnsense-ee:latest
+docker push ghcr.io/bryanr77/awx-opnsense-ee:$(git rev-parse --short HEAD)
 ```
 
 Notes and recommendations

@@ -14,8 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_BASE: quay.io/rockylinux/rockylinux:9
-      IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/awx-opnsense-ee:latest
-      BUILDER_IMAGE: ghcr.io/${{ github.repository_owner }}/awx-opnsense-ee-builder:latest
+      OWNER: ${{ toLower(github.repository_owner) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,17 +28,17 @@ jobs:
 
       - name: Build builder image
         run: |
-          docker build --pull --build-arg IMAGE="$IMAGE_BASE" -t "$BUILDER_IMAGE" .
+          docker build --pull --build-arg IMAGE="$IMAGE_BASE" -t "ghcr.io/$OWNER/awx-opnsense-ee-builder:latest" .
 
       - name: Run builder to create final image
         run: |
-          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock "$BUILDER_IMAGE" -t "$IMAGE_NAME"
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock "ghcr.io/$OWNER/awx-opnsense-ee-builder:latest" -t "ghcr.io/$OWNER/awx-opnsense-ee:latest"
 
       - name: Tag image with commit SHA
         run: |
-          docker tag "$IMAGE_NAME" ghcr.io/${{ github.repository_owner }}/awx-opnsense-ee:${{ github.sha }}
+          docker tag "ghcr.io/$OWNER/awx-opnsense-ee:latest" "ghcr.io/$OWNER/awx-opnsense-ee:${GITHUB_SHA}"
 
       - name: Push images to ghcr
         run: |
-          docker push "$IMAGE_NAME"
-          docker push ghcr.io/${{ github.repository_owner }}/awx-opnsense-ee:${{ github.sha }}
+          docker push "ghcr.io/$OWNER/awx-opnsense-ee:latest"
+          docker push "ghcr.io/$OWNER/awx-opnsense-ee:${GITHUB_SHA}"
