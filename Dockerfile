@@ -1,7 +1,7 @@
 ARG IMAGE=
 FROM $IMAGE
 
-RUN yum install -y python3-pip && pip3 install --break-system-packages ansible-builder
+RUN yum install -y python3-pip && pip3 install --upgrade pip && pip3 install --break-system-packages ansible-builder
 
 WORKDIR /build
 
